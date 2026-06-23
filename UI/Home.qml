@@ -11,7 +11,7 @@ Item {
     property int currentPage: 0
 
     Component.onCompleted: {
-        myPatientModel.loadData(window.currentPage) // Initial fetch for Page 0
+        myPatientModel.loadData(window.currentPage); // Initial fetch for Page 0
     }
 
     TableModel {
@@ -19,6 +19,7 @@ Item {
     }
 
     ColumnLayout {
+        layoutDirection: Qt.RightToLeft
         anchors.fill: parent
         spacing: 15
         anchors.margins: 10
@@ -28,12 +29,13 @@ Item {
         // ==========================================
         GroupBox {
             title: "اضافة مريض جديد"
+            LayoutMirroring.enabled: true
+            LayoutMirroring.childrenInherit: true
             Layout.fillWidth: true
 
             RowLayout {
                 anchors.fill: parent
                 spacing: 10
-
                 TextField {
                     id: nameInput
                     placeholderText: "الاسم"
@@ -59,15 +61,15 @@ Item {
                 }
 
                 Button {
-                    text: "Add Patient"
+                    text: "اضافة المريض"
                     highlighted: true
                     onClicked: {
                         if (nameInput.text !== "" && ageInput.text !== "") {
-                            myPatientModel.addPatient(nameInput.text, ageInput.text, jobInput.text, addressInput.text)
-                            nameInput.clear()
-                            ageInput.clear()
-                            jobInput.clear()
-                            dateInput.clear()
+                            myPatientModel.addPatient(nameInput.text, ageInput.text, jobInput.text, addressInput.text);
+                            nameInput.clear();
+                            ageInput.clear();
+                            jobInput.clear();
+                            dateInput.clear();
                         }
                     }
                 }
@@ -75,37 +77,43 @@ Item {
         }
 
         RowLayout {
-                    Layout.fillWidth: true
-                    Layout.margins: 5
-                    layoutDirection: Qt.RightToLeft
+            Layout.fillWidth: true
+            Layout.margins: 5
+            layoutDirection: Qt.RightToLeft
 
-                    Label {
-                        text: "بحث شامل:"
-                        font.bold: true
-                        Layout.alignment: Qt.AlignVCenter
-                    }
+            Label {
+                text: "بحث شامل:"
+                font.bold: true
+                Layout.alignment: Qt.AlignVCenter
+            }
 
-                    TextField {
-                        id: searchInput
-                        placeholderText: "ابحث في جميع الحقول المطابقة هنا..."
-                        Layout.fillWidth: true
-
-                        horizontalAlignment: TextInput.AlignRight
-
-                        // Calls C++ loadData filtering automatically as you type
-                        onTextChanged: {
-
-                            window.currentPage = 0 // Reset pagination to index 0 on new filters
-
-                            myPatientModel.loadData(window.currentPage, 10 ,searchInput.text)
-                        }
-                    }
-
-                    Button {
-                        text: "مسح"
-                        onClicked: searchInput.clear()
-                    }
+            Timer {
+                id: debounceTimer
+                interval: 300 // Delay in milliseconds (300ms is standard for UX)
+                repeat: false
+                onTriggered: {
+                    window.currentPage = 0; // Reset pagination to index 0 on new filters
+                    myPatientModel.loadData(window.currentPage, 10, searchInput.text);
                 }
+            }
+
+            TextField {
+                id: searchInput
+                placeholderText: "ابحث في جميع الحقول المطابقة هنا..."
+                Layout.fillWidth: true
+
+                horizontalAlignment: TextInput.AlignRight
+
+                onTextChanged: {
+                    debounceTimer.restart();
+                }
+            }
+
+            Button {
+                text: "مسح"
+                onClicked: searchInput.clear()
+            }
+        }
 
         // ==========================================
         // MIDDLE PART: TABLE VIEW WITH HEADERS
@@ -120,7 +128,6 @@ Item {
                 id: horizontalHeader
                 syncView: tableView
                 Layout.fillWidth: true
-
 
                 delegate: Rectangle {
                     implicitHeight: 35
@@ -146,11 +153,10 @@ Item {
 
                 model: myPatientModel
 
-
-               property var columnProportions: [0.10, 0.15, 0.30, 0.12, 0.18, 0.15]
+                property var columnProportions: [0.10, 0.15, 0.30, 0.12, 0.18, 0.15]
                 // Note: Make sure the numbers inside add up to exactly 1.0 (100%)!
 
-                columnWidthProvider: function(column) {
+                columnWidthProvider: function (column) {
                     // 1. Establish the maximum available display grid width dynamically
                     var baseWidth = tableView.width > 50 ? tableView.width : (parent.width > 50 ? parent.width : 800);
 
@@ -191,7 +197,7 @@ Item {
 
                         onEditingFinished: {
                             if (text !== display) {
-                                display = text
+                                display = text;
                             }
                         }
                     }
@@ -209,7 +215,9 @@ Item {
             spacing: 20
 
             // Push layout to center
-            Item { Layout.fillWidth: true }
+            Item {
+                Layout.fillWidth: true
+            }
 
             Button {
                 id: prevButton
@@ -258,7 +266,9 @@ Item {
             }
 
             // Push layout to center
-            Item { Layout.fillWidth: true }
+            Item {
+                Layout.fillWidth: true
+            }
         }
     }
 }
