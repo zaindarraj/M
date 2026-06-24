@@ -14,7 +14,7 @@ Item {
     readonly property color colorBgLight: "#f4f6f7"       // Off-white canvas background
     readonly property color colorCardBg: "#ffffff"        // Pure white for containers
     readonly property color colorBorder: "#d5dbdb"        // Clean, subtle border color
-    readonly property color colorTextMuted: "#7f8c8d"     // Grey for placeholders/small labels
+    readonly property color colorTextMuted: "#3c4344"  // Grey for placeholders/small labels
 
     property int currentPage: 0
 
@@ -98,17 +98,13 @@ Item {
             RowLayout {
                 Layout.fillWidth: true
                 layoutDirection: Qt.RightToLeft
+                Layout.margins: 2
                 spacing: 10
 
                 Button {
                     text: "اختر ملف قاعدة البيانات (Pick DB)"
                     onClicked: dbFileDialog.open()
 
-                    background: Rectangle {
-                        color: parent.hovered ? "#eaeded" : "#f2f4f4"
-                        border.color: window.colorBorder
-                        radius: 4
-                    }
                 }
 
                 Label {
@@ -261,6 +257,7 @@ Item {
             // Search Bar Row
             RowLayout {
                 Layout.fillWidth: true
+                Layout.margins: 5
                 layoutDirection: Qt.RightToLeft
                 spacing: 12
 
@@ -399,11 +396,7 @@ Item {
                             readOnly: column === 0
                             selectByMouse: true
 
-                            background: Rectangle {
-                                color: "transparent"
-                                border.width: parent.activeFocus ? 1 : 0
-                                border.color: window.colorAccent
-                            }
+
 
                             onActiveFocusChanged: {
                                 if (activeFocus) {
@@ -516,11 +509,7 @@ Item {
                             readOnly: true
                             text: myPatientModel.currentPatientRecord.id ?? ""
 
-                            background: Rectangle {
-                                color: "#f2f4f4"
-                                border.color: window.colorBorder
-                                radius: 4
-                            }
+
                         }
                     }
 
@@ -704,6 +693,7 @@ Item {
             // حقل الشكوى الرئيسية (DZ4)
             ColumnLayout {
                 Layout.fillWidth: true
+                Layout.margins: 5
                 spacing: 4
 
                 Label {
@@ -726,11 +716,11 @@ Item {
                 }
             }
 
-            // حقل التاريخ المرضي المفصل (DZ6)
+
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 4
-
+                Layout.margins: 5
                 Label {
                     text: "التاريخ المرضي المفصل (Detailed History):"
                     font.bold: true
@@ -758,7 +748,6 @@ Item {
                         text: myPatientModel.currentPatientRecord.detailedHistory ?? ""
                         padding: 8
 
-                        background: null // Handled by scrollview parent context wrapper
 
                         onEditingFinished: {
                             myPatientModel.currentPatientRecord.detailedHistory = text;
@@ -768,10 +757,11 @@ Item {
                 }
             }
 
-            // حقل الخطة العلاجية أو الإجراء الجراحي (DZ20)
+
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 4
+                Layout.margins: 5
 
                 Label {
                     text: "الإجراء العلاجي / الخطة الجراحية (Treatment Procedure):"
@@ -800,7 +790,6 @@ Item {
                         text: myPatientModel.currentPatientRecord.treatmentProcedure ?? ""
                         padding: 8
 
-                        background: null // Handled by scrollview parent context wrapper
 
                         onEditingFinished: {
                             myPatientModel.currentPatientRecord.treatmentProcedure = text;
