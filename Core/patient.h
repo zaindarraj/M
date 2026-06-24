@@ -8,7 +8,7 @@ class Patient
 public:
     Patient();
 
-    Patient(const QString &id, const QString &name, const QString &age, const QString &job, const QString &address,const QString &date);
+    Patient(const QString &id, const QString &name, const QString &age, const QString &job, const QString &address, const QString &phone , const QString &date);
 
     // Public getters (These SHOULD be const because they only read data)
     QString job() const;
@@ -16,6 +16,7 @@ public:
     QString age() const;
     QString date() const;
     QString id() const;
+    QString phone()const;
     QString address() const;
     // Public setters (Removed 'const' so they can modify member variables)
     void setJob(const QString &job);
@@ -24,7 +25,7 @@ public:
     void setDate(const QString &date);
     void setID(const QString &id);
     void setAddress(const QString &address);
-
+    void setPhone(const QString &phone);
 private:
     QString m_job;
     QString m_name;
@@ -32,6 +33,7 @@ private:
     QString m_date;
     QString m_id;
     QString m_address;
+    QString m_phone;
 };
 
 #endif // PATIENT_H

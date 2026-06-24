@@ -18,6 +18,7 @@ qt_add_qml_module(appUI
     QML_FILES
     Home.qml
     SOURCES tablemodel.h tablemodel.cpp
+    SOURCES databasemanager.h databasemanager.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

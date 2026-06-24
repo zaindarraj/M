@@ -20,6 +20,7 @@ qt_add_qml_module(appCore
     QML_FILES
     SOURCES patient.h patient.cpp
     SOURCES repository.h repository.cpp
+    SOURCES patientrecored.h patientrecored.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

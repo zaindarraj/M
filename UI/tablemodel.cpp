@@ -66,11 +66,12 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
 
         // Map columns to the Patient properties based on your Arabic headers
         switch (index.column()) {
-        case 5 : return patient.id();
-        case 4: return patient.name();
-        case 3: return patient.age();
-        case 2: return patient.job();
-        case 1: return patient.address();
+        case 6 : return patient.id();
+        case 5: return patient.name();
+        case 4: return patient.age();
+        case 3: return patient.job();
+        case 2: return patient.address();
+        case 1: return patient.phone();
         case 0: return patient.date();
         default: return QVariant();
         }
@@ -92,29 +93,35 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
     QString stringValue = value.toString();
 
     switch (index.column()) {
-    case 5:
+    case 6:
         return false;
-    case 2:
+    case 3:
         if (patient.job() != stringValue) {
             patient.setJob(stringValue);
             trackingChanged = true;
         }
         break;
-    case 4:
+    case 5:
         if (patient.name() != stringValue) {
             patient.setName(stringValue);
             trackingChanged = true;
         }
         break;
-    case 3:
+    case 4:
         if (patient.age() != stringValue) {
             patient.setAge(stringValue);
             trackingChanged = true;
         }
         break;
-    case 1:
+    case 2:
         if (patient.address() != stringValue) {
             patient.setAddress(stringValue);
+            trackingChanged = true;
+        }
+        break;
+    case 1:
+        if (patient.phone() != stringValue) {
+            patient.setPhone(stringValue);
             trackingChanged = true;
         }
         break;
@@ -191,7 +198,7 @@ void TableModel::loadData(int pageIndex, int pageSize, const QString &searchQuer
     endResetModel();
 }
 
-void TableModel::addPatient(const QString& name, const QString& age, const QString& job, const QString& location) {
+void TableModel::addPatient(const QString& name, const QString& age, const QString& job, const QString& location,const QString& phone) {
     // 1. Calculate the index where the new row will sit (usually the end of the list)
     int nextRowIndex = m_currentPageData.count();
 
@@ -200,7 +207,7 @@ void TableModel::addPatient(const QString& name, const QString& age, const QStri
 
     // 3. Execute your database append write via the repository
     // Note: Use a blank or temporary database primary ID here (e.g., -1 or 0)
-    Patient newPatient("-1", name, age, job, location ,QDate::currentDate().toString("yyyy-MM-dd"));
+    Patient newPatient("-1", name, age, job, location , phone ,QDate::currentDate().toString("yyyy-MM-dd"));
     m_repository.addPatient(newPatient);
 
     // 4. Update your TableModel's local C++ memory cache list so rowCount() matches
@@ -208,4 +215,38 @@ void TableModel::addPatient(const QString& name, const QString& age, const QStri
 
     // 5. Finalize the operation to force QML to instantly render the new row
     endInsertRows();
+
+    loadData(0, 10, "");
+}
+
+void TableModel::fetchPatientRecored(QString id){
+    setCurrentPatientRecord(m_repository.fetchPatientRecored(id));
+}
+
+PatientRecord TableModel::currentPatientRecord() const {
+    return m_currentPatientRecord;
+}
+
+void TableModel::setCurrentPatientRecord(const PatientRecord &record) {
+
+
+
+    m_currentPatientRecord =record;
+
+    qDebug() << "The id is:" << m_currentPatientRecord.id();
+
+    emit currentPatientRecordChanged(m_currentPatientRecord);
+}
+
+QString TableModel::getCodeA(int row) const
+{
+    qCritical() << "Hello";
+    if (row < 0 || row >= m_currentPageData.size()) {
+        return QString(); // Return empty string if out of bounds
+    }
+    return m_currentPageData[row].id(); // Returns CODEA
+}
+
+void TableModel::updatePatientRecored()  {
+    m_repository.savePatientRecored(m_currentPatientRecord);
 }

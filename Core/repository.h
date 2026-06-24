@@ -7,7 +7,7 @@
 #include <QVariant>
 #include <QDebug>
 #include "patient.h"
-
+#include "patientrecored.h"
 class Repository
 {
 public:
@@ -15,6 +15,12 @@ public:
 
     // Fetches a specific page of data (e.g., Page 0 gets items 0-9)
     QVector<Patient> fetchPage(int pageIndex, int pageSize = 10, const QString &searchQuery = "");
+
+    PatientRecord fetchPatientRecored(QString id);
+
+    // Updates an existing patient recored row based on its unique ID
+    bool savePatientRecored(const PatientRecord &patient);
+
 
     // Updates an existing patient row based on its unique ID
     bool savePatient(const Patient &patient);
